@@ -51,6 +51,14 @@ public class ProductController {
         return response;
     }
 
+    @GetMapping("/{id}")
+    public Map<String, Object> getProductByIdDirect(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Product product = productRepository.findById(id).orElse(null);
+        response.put("products", product);
+        return response;
+    }
+
     @PutMapping
     public Map<String, String> updateProduct(@RequestBody Product product) {
         Map<String, String> response = new HashMap<>();

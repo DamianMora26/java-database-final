@@ -35,6 +35,12 @@ public class StoreController {
         return store.isPresent();
     }
 
+    @GetMapping("validate/store/{storeId}")
+    public boolean validateStoreAlt(@PathVariable Long storeId) {
+        Optional<Store> store = storeRepository.findById(storeId);
+        return store.isPresent();
+    }
+
     @PostMapping("/placeOrder")
     public Map<String, String> placeOrder(@RequestBody PlaceOrderRequestDTO placeOrderRequest) {
         Map<String, String> response = new HashMap<>();

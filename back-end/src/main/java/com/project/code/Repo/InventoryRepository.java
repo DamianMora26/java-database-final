@@ -1,4 +1,4 @@
-package com.project.code.Repository;
+package com.project.code.Repo;
 
 import com.project.code.Model.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;

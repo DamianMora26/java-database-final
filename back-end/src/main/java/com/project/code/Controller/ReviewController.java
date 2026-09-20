@@ -19,6 +19,11 @@ public class ReviewController {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @GetMapping
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
+    }
+
     @GetMapping("/{storeId}/{productId}")
     public Map<String, Object> getReviews(@PathVariable Long storeId, @PathVariable Long productId) {
         Map<String, Object> response = new HashMap<>();

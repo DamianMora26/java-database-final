@@ -2,49 +2,65 @@ package com.project.code.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-public class Customer {
+public class OrderDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NotNull(message = "El nombre no puede ser nulo")
-    private String name;
-
-    @NotNull(message = "El email no puede ser nulo")
-    private String email;
-
-    @NotNull(message = "El teléfono no puede ser nulo")
-    private String phone;
-
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     @JsonManagedReference
-    private List<OrderDetails> orders;
+    private Customer customer;
 
-    public Customer() {}
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    @JsonManagedReference
+    private Store store;
 
-    public Customer(String name, String email, String phone) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
+    private Double totalPrice;
+
+    /**
+     * Date and time when the order was placed.
+     */
+    private LocalDateTime orderDate;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<OrderItem> orderItems;
+
+    public OrderDetails() {}
+
+    public OrderDetails(Customer customer, Store store, Double totalPrice, LocalDateTime orderDate) {
+        this.customer = customer;
+        this.store = store;
+        this.totalPrice = totalPrice;
+        this.orderDate = orderDate;
     }
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public Store getStore() { return store; }
+    public void setStore(Store store) { this.store = store; }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public Double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
 
-    public List<OrderDetails> getOrders() { return orders; }
-    public void setOrders(List<OrderDetails> orders) { this.orders = orders; }
+    public LocalDateTime getOrderDate() { return orderDate; }
+    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+
+    // Compatibilidad por si algún componente busca getDate()
+    public LocalDateTime getDate() { return orderDate; }
+    public void setDate(LocalDateTime date) { this.orderDate = date; }
+
+    public List<OrderItem> getOrderItems() { return orderItems; }
+    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
 }

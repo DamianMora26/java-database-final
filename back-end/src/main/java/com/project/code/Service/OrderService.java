@@ -31,18 +31,15 @@ public class OrderService {
     private OrderItemRepository orderItemRepository;
 
     public void saveOrder(PlaceOrderRequestDTO placeOrderRequest) {
-        // 1. Recuperar o Crear Cliente
         Customer customer = customerRepository.findByEmail(placeOrderRequest.getEmail());
         if (customer == null) {
             customer = new Customer(placeOrderRequest.getName(), placeOrderRequest.getEmail(), placeOrderRequest.getPhone());
             customer = customerRepository.save(customer);
         }
 
-        // 2. Recuperar la Tienda
         Store store = storeRepository.findById(placeOrderRequest.getStoreId())
                 .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
 
-        // 3. Crear y guardar OrderDetails
         OrderDetails orderDetails = new OrderDetails(
                 customer,
                 store,
@@ -51,7 +48,6 @@ public class OrderService {
         );
         orderDetails = orderDetailsRepository.save(orderDetails);
 
-        // 4. Procesar OrderItems y actualizar inventario
         if (placeOrderRequest.getPurchaseProduct() != null) {
             for (ProductDTO productDTO : placeOrderRequest.getPurchaseProduct()) {
                 Inventory inventory = inventoryRepository.findByProductIdandStoreId(productDTO.getProductId(), store.getId());

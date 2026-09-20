@@ -1,24 +1,20 @@
 package com.project.code.Repo;
-
 import com.project.code.Model.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
     List<Product> findByCategory(String category);
 
+    @Query("SELECT i.product FROM Inventory i WHERE i.store.id = :storeId AND i.product.category = :category")
+    List<Product> findByCategoryAndStoreId(@Param("storeId") Long storeId, @Param("category") String category);
+
     List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
-
     List<Product> findBySku(String sku);
-
     Product findByName(String name);
-
     Product findById(long id);
 
     @Query("SELECT i.product FROM Inventory i WHERE i.store.id = :storeId AND LOWER(i.product.name) LIKE LOWER(CONCAT('%', :pname, '%'))")
@@ -26,9 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT i.product FROM Inventory i WHERE i.store.id = :storeId AND LOWER(i.product.name) LIKE LOWER(CONCAT('%', :pname, '%')) AND i.product.category = :category")
     List<Product> findByNameAndCategory(@Param("storeId") Long storeId, @Param("pname") String pname, @Param("category") String category);
-
-    @Query("SELECT i.product FROM Inventory i WHERE i.store.id = :storeId AND i.product.category = :category")
-    List<Product> findByCategoryAndStoreId(@Param("storeId") Long storeId, @Param("category") String category);
 
     @Query("SELECT i FROM Product i WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :pname, '%'))")
     List<Product> findProductBySubName(@Param("pname") String pname);

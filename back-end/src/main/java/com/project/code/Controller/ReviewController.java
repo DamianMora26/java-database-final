@@ -20,8 +20,10 @@ public class ReviewController {
     private CustomerRepository customerRepository;
 
     @GetMapping
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public Map<String, Object> getAllReviews() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("reviews", reviewRepository.findAll());
+        return response;
     }
 
     @GetMapping("/{storeId}/{productId}")
